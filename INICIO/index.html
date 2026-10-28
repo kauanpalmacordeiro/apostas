@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050506">
+    <title>Seja bem-vindo</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <main class="tela" aria-label="Escolha uma experiência">
+
+        <!-- ========================
+             LADO TCC — VERSÃO ATUAL
+        ========================= -->
+        
+        <section class="lado tcc" data-lado="tcc">
+            <div class="tcc-frame" aria-hidden="true"></div>
+
+            <div class="conteudo conteudo-tcc">
+                <div class="micro-label">
+                    <span class="micro-dot"></span>
+                    ANÁLISE • DADOS • IMPACTOS
+                </div>
+
+                <div class="titulo-tcc-wrap">
+                    <span class="titulo-index">01</span>
+                    <h1 class="titulo-tcc">TCC</h1>
+                </div>
+
+                <p class="subtitulo-tcc">Quer entender o sistema?</p>
+
+                <button class="btn-tcc magnetic" type="button" onclick="abrirTela('tcc')">
+                    <span>SIM</span>
+                    <span class="btn-arrow" aria-hidden="true">↗</span>
+                </button>
+
+                <div class="tcc-status" aria-hidden="true">
+                    <span></span>
+                    <p>DOCUMENTO INTERATIVO</p>
+                </div>
+            </div>
+
+            <div class="edge-label edge-label-tcc" aria-hidden="true">PESQUISA / 2026</div>
+        </section>
+
+        <!-- ========================
+             LADO JOGAR — VERSÃO ANTIGA
+        ========================= -->
+        <section class="lado jogar" data-lado="jogar">
+
+            <div class="luzes-bet" aria-hidden="true"></div>
+
+            <div class="particulas" aria-hidden="true">
+                <span>◆</span>
+                <span>R$</span>
+                <span>★</span>
+                <span>7</span>
+                <span>♦</span>
+                <span>R$</span>
+                <span>7</span>
+                <span>★</span>
+            </div>
+
+            <div class="conteudo-bet">
+
+                <div class="selo-bet">
+                    <span class="ponto-online"></span>
+                    APOSTAS ONLINE
+                </div>
+
+                <h1 class="titulo-bet">
+                    <span>BET</span>
+                </h1>
+
+                <p class="subtitulo-bet">
+                    Sua sorte pode mudar em segundos.
+                </p>
+
+                <div class="premio-bet">
+                    <span class="premio-texto">PRÊMIO MÁXIMO</span>
+                    <strong>R$ 1.000.000</strong>
+                </div>
+
+                <button class="botao-apostar" type="button" onclick="abrirTela('jogar')">
+                    <span>APOSTAR AGORA</span>
+                    <span class="seta" aria-hidden="true">➜</span>
+                </button>
+
+                <p class="aviso-bet">
+                    Diversão, risco e consequências.
+                </p>
+
+            </div>
+
+            <div class="edge-label edge-label-bet" aria-hidden="true">SIMULADOR / SALDO FICTÍCIO</div>
+        </section>
+
+        <div class="divisor" aria-hidden="true">
+            <span></span>
+        </div>
+
+    </main>
+
+    <script src="./script.js"></script>
+</body>
+</html>

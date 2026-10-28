@@ -1,0 +1,37 @@
+BET — CRÉDITOS / ÁUDIO
+
+MÚSICA AMBIENTE
+As faixas do seletor são carregadas a partir de conteúdos disponibilizados no OpenGameArt.
+O seletor contém 15 faixas distintas e o JavaScript avança automaticamente para a próxima ao terminar.
+
+Faixas:
+- Hypnotic Chill
+- Calm Track
+- The Casino
+- Night Club Chill
+- Vintage Menu
+- Starfishario
+- Out There
+- Caves
+- Anti Matter Magic
+- Currents
+- Tribal Chaos
+- Experiment G
+- Space Collisions
+- Wicked Beast
+- Test Subject
+
+O arquivo assets/audio/ambient_long.ogg permanece como fallback caso todas as faixas externas falhem.
+
+EFEITOS LOCAIS
+assets/audio/spin.ogg
+assets/audio/stop1.ogg
+assets/audio/stop2.ogg
+assets/audio/stop3.ogg
+assets/audio/click.ogg
+assets/audio/win_soft.ogg
+assets/audio/win_big.ogg
+assets/audio/circuit.ogg
+assets/audio/glass_break.ogg
+assets/audio/upgrade.ogg
+assets/audio/defeat.ogg

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Caça-níquel de demonstração para projeto escolar sobre apostas online.">
+    <title>BET | Jogo</title>
+    <link rel="stylesheet" href="./jogar.css">
+</head>
+<body data-theme="purple">
+
+    <!-- Entrada: o clique também desbloqueia o áudio no navegador -->
+    <div class="audio-gate" id="audio-gate">
+        <div class="gate-background gate-background-final" aria-hidden="true">
+            <i class="gate-orb gate-orb-a"></i>
+            <i class="gate-orb gate-orb-b"></i>
+            <i class="gate-grid"></i>
+            <i class="gate-rays"></i>
+            <i class="gate-scan"></i>
+            <i class="gate-beam gate-beam-a"></i>
+            <i class="gate-beam gate-beam-b"></i>
+
+            <div class="gate-watermark-logo">
+                <img src="./assets/img/bet-mark.svg" alt="">
+            </div>
+
+            <span class="gate-float gate-float-1">◆</span>
+            <span class="gate-float gate-float-2">♠</span>
+            <span class="gate-float gate-float-3">★</span>
+            <span class="gate-float gate-float-4">♣</span>
+        </div>
+
+        <div class="gate-machine gate-machine-final">
+            <span class="gate-corner corner-tl" aria-hidden="true"></span>
+            <span class="gate-corner corner-tr" aria-hidden="true"></span>
+            <span class="gate-corner corner-bl" aria-hidden="true"></span>
+            <span class="gate-corner corner-br" aria-hidden="true"></span>
+
+            <div class="gate-logo-stage" aria-hidden="true">
+                <span class="logo-orbit orbit-a"></span>
+                <span class="logo-orbit orbit-b"></span>
+                <span class="logo-core-glow"></span>
+                <img class="gate-logo-image" src="./assets/img/bet-mark.svg" alt="">
+            </div>
+
+            <p class="gate-kicker">PLATAFORMA NOVA</p>
+
+            <div class="gate-title-wrap">
+                <span class="gate-title-ghost" aria-hidden="true">BET</span>
+                <h1>BET</h1>
+            </div>
+
+            <p class="gate-prize">PRÊMIO MÁXIMO <strong>R$ 1.000.000</strong></p>
+
+            <button id="start-game" type="button">
+                <span>ENTRAR NO JOGO</span>
+                <span class="start-arrow" aria-hidden="true">➜</span>
+            </button>
+
+            <div class="gate-energy" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fundo leve: só transform/opacity para não pesar -->
+    <div class="ambient-bg" aria-hidden="true">
+        <div class="ambient-orb orb-a"></div>
+        <div class="ambient-orb orb-b"></div>
+        <div class="ambient-orb orb-c"></div>
+        <div class="ambient-grid"></div>
+        <div class="ambient-lines"></div>
+    </div>
+
+    <header class="topbar" id="game-topbar">
+        <a class="brand" href="../INICIO/index.html" aria-label="Voltar para a tela inicial">
+            <span class="brand-mark"><img src="./assets/img/bet-mark.svg" alt="BET"></span>
+            <span class="brand-copy">
+                <strong>BET</strong>
+            </span>
+        </a>
+
+        <nav class="quick-nav" aria-label="Navegação rápida">
+            <a class="quick-nav-link" href="../INICIO/index.html">
+                <span>⌂</span><strong>INÍCIO</strong>
+            </a>
+            <a class="quick-nav-link" href="../TCC/tcc.html">
+                <span>▤</span><strong>TCC</strong>
+            </a>
+        </nav>
+
+        <div class="top-actions">
+            <span class="points-badge" id="points-badge">PONTOS <strong id="points-top">0</strong></span>
+            <div class="audio-controls">
+                <button class="audio-control" id="music-toggle" type="button" aria-label="Ativar ou desativar música" title="Música">
+                    <span>♫</span><small>MÚSICA</small>
+                </button>
+                <label class="music-picker" for="music-select" title="Escolher música">
+                    <span>♪</span>
+                    <select id="music-select" aria-label="Escolher música ambiente"></select>
+                </label>
+                <button class="audio-control" id="sfx-toggle" type="button" aria-label="Ativar ou desativar efeitos sonoros" title="Efeitos">
+                    <span>FX</span><small>EFEITOS</small>
+                </button>
+            </div>
+            <button class="debug-button" id="debug-million" type="button" title="Botão temporário para testar o evento de R$ 1 milhão">TESTE R$ 1M</button>
+            <button class="debug-button alt" id="debug-points" type="button" title="Botão temporário para testar aprimoramentos">TESTE PTS</button>
+        </div>
+    </header>
+
+    <main class="game-page" id="game-page">
+        <section class="game-stage" aria-label="Caça-níquel fictício">
+            <div class="stage-glow" aria-hidden="true"></div>
+
+            <div class="game-layout">
+                <aside class="side-console side-console-left" aria-label="Personalização e melhoria de chance">
+                    <button class="personalize-button" id="open-customizer" type="button">
+                        <span class="side-icon">✦</span>
+                        <span><small>VISUAL</small><strong>PERSONALIZAR</strong></span>
+                    </button>
+
+                    <article class="upgrade-card level-0" id="upgrade-chance-card" data-upgrade="chance">
+                        <div class="upgrade-head">
+                            <span class="upgrade-icon">◎</span>
+                            <div><small>APRIMORAMENTO</small><strong>CHANCE DE GANHO</strong></div>
+                            <b id="upgrade-chance-level">NV. 0</b>
+                        </div>
+                        <p class="upgrade-explain">Aumenta a frequência real de combinações vencedoras nas rodadas.</p>
+                        <div class="upgrade-pips" id="upgrade-chance-pips" aria-hidden="true"></div>
+                        <p class="upgrade-effect" id="upgrade-chance-effect">Chance base ativa</p>
+                        <button class="upgrade-button" id="upgrade-chance-button" type="button">
+                            <span>EVOLUIR</span><strong id="upgrade-chance-cost">10.000 pts</strong>
+                        </button>
+                    </article>
+                </aside>
+
+                <div class="slot-machine machine-classic" id="slot-machine">
+                <div class="reel-frame" id="reel-frame">
+                    <div class="reel-shine" aria-hidden="true"></div>
+                    <div class="reels" id="reels">
+                        <div class="reel" data-reel="0"><div class="reel-strip"></div></div>
+                        <div class="reel" data-reel="1"><div class="reel-strip"></div></div>
+                        <div class="reel" data-reel="2"><div class="reel-strip"></div></div>
+                    </div>
+
+                    <svg class="payline-layer" id="payline-layer" viewBox="0 0 300 300" preserveAspectRatio="none" aria-hidden="true">
+                        <path id="payline-path" d="" />
+                    </svg>
+                </div>
+
+                <div class="win-strip" id="win-strip" aria-live="polite">
+                    <span>ÚLTIMO GANHO</span>
+                    <strong id="last-win">R$ 0,00</strong>
+                </div>
+
+                <div class="money-row">
+                    <div class="money-panel balance-panel">
+                        <span>SALDO</span>
+                        <strong id="balance">R$ 100,00</strong>
+                    </div>
+
+                    <div class="money-panel bet-panel">
+                        <span>APOSTA</span>
+                        <strong id="bet-value">R$ 10,00</strong>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="round-control" id="bet-minus" type="button" aria-label="Diminuir aposta">−</button>
+                    <button class="spin-button" id="spin-button" type="button">
+                        <span class="spin-ring" aria-hidden="true"></span>
+                        <span class="spin-icon" aria-hidden="true">↻</span>
+                        <span class="spin-label">GIRAR</span>
+                    </button>
+                    <button class="round-control" id="bet-plus" type="button" aria-label="Aumentar aposta">+</button>
+                </div>
+
+                <p class="max-bet">APOSTA MÁXIMA: R$ 100.000</p>
+            </div>
+
+                <aside class="side-console side-console-right" aria-label="Melhorias de ganho e jackpot">
+                    <article class="upgrade-card level-0" id="upgrade-gain-card" data-upgrade="gain">
+                        <div class="upgrade-head">
+                            <span class="upgrade-icon">↗</span>
+                            <div><small>APRIMORAMENTO</small><strong>MULTIPLICADOR</strong></div>
+                            <b id="upgrade-gain-level">NV. 0</b>
+                        </div>
+                        <p class="upgrade-explain">Aumenta o valor dos prêmios normais quando uma linha é premiada.</p>
+                        <div class="upgrade-pips" id="upgrade-gain-pips" aria-hidden="true"></div>
+                        <p class="upgrade-effect" id="upgrade-gain-effect">Ganhos em 100%</p>
+                        <button class="upgrade-button" id="upgrade-gain-button" type="button">
+                            <span>EVOLUIR</span><strong id="upgrade-gain-cost">15.000 pts</strong>
+                        </button>
+                    </article>
+
+                    <article class="upgrade-card level-0" id="upgrade-jackpot-card" data-upgrade="jackpot">
+                        <div class="upgrade-head">
+                            <span class="upgrade-icon">◆</span>
+                            <div><small>APRIMORAMENTO</small><strong>PRÊMIO DE RISCO</strong></div>
+                            <b id="upgrade-jackpot-level">NV. 0</b>
+                        </div>
+                        <p class="upgrade-explain">Aumenta apenas o prêmio das 9 figuras iguais. O jackpot continua raro.</p>
+                        <div class="upgrade-pips" id="upgrade-jackpot-pips" aria-hidden="true"></div>
+                        <p class="upgrade-effect" id="upgrade-jackpot-effect">Jackpot em 200×</p>
+                        <button class="upgrade-button" id="upgrade-jackpot-button" type="button">
+                            <span>EVOLUIR</span><strong id="upgrade-jackpot-cost">20.000 pts</strong>
+                        </button>
+                    </article>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <div class="customizer-layer hidden" id="customizer-layer" role="dialog" aria-modal="true" aria-labelledby="customizer-title">
+        <div class="customizer-backdrop" data-close-customizer></div>
+        <section class="customizer-panel">
+            <header class="customizer-header">
+                <div>
+                    <span>OFICINA VISUAL</span>
+                    <h2 id="customizer-title">Personalizar</h2>
+                </div>
+                <button id="close-customizer" type="button" aria-label="Fechar personalização">×</button>
+            </header>
+
+            <div class="customizer-section">
+                <div class="customizer-copy"><span>01</span><div><strong>FIGURAS</strong><small>Troque o conjunto inteiro dos rolos.</small></div></div>
+                <div class="choice-grid symbol-choice-grid" id="symbol-choices">
+                    <button class="choice-card active" data-symbol-pack="fruits" type="button"><b>🍒 🍋 🍀</b><span>Frutas</span></button>
+                    <button class="choice-card" data-symbol-pack="casino" type="button"><b>♠ ♦ 🎲</b><span>Cassino</span></button>
+                    <button class="choice-card" data-symbol-pack="colors" type="button"><b>⚡ ❖ ✦</b><span>Cores</span></button>
+                    <button class="choice-card" data-symbol-pack="countries" type="button"><b class="flag-preview-row"><i class="flag-preview br"></i><i class="flag-preview jp"></i><i class="flag-preview us"></i></b><span>Bandeiras</span></button>
+                    <button class="choice-card" data-symbol-pack="random" type="button"><b>?</b><span>Aleatório</span></button>
+                </div>
+            </div>
+
+            <div class="customizer-section">
+                <div class="customizer-copy"><span>02</span><div><strong>FORMA DA MÁQUINA</strong><small>Quatro carcaças, mesma lógica de jogo.</small></div></div>
+                <div class="choice-grid machine-choice-grid" id="machine-choices">
+                    <button class="choice-card machine-choice active" data-machine="classic" type="button"><div class="machine-mini classic-mini"></div><span>Clássica</span></button>
+                    <button class="choice-card machine-choice" data-machine="arcade" type="button"><div class="machine-mini arcade-mini"></div><span>Sleek</span></button>
+                    <button class="choice-card machine-choice" data-machine="vault" type="button"><div class="machine-mini vault-mini"></div><span>Cofre</span></button>
+                    <button class="choice-card machine-choice" data-machine="orbit" type="button"><div class="machine-mini orbit-mini"></div><span>Elite</span></button>
+                </div>
+            </div>
+
+            <div class="customizer-section">
+                <div class="customizer-copy"><span>03</span><div><strong>TEMA</strong><small>A cor muda a máquina, os efeitos e o ambiente.</small></div></div>
+                <div class="theme-choices" id="theme-choices">
+                    <button class="theme-choice purple active" data-theme-choice="purple" type="button"><i></i><span>Roxo</span></button>
+                    <button class="theme-choice red" data-theme-choice="red" type="button"><i></i><span>Vermelho</span></button>
+                    <button class="theme-choice gold" data-theme-choice="gold" type="button"><i></i><span>Amarelo</span></button>
+                    <button class="theme-choice cyan" data-theme-choice="cyan" type="button"><i></i><span>Ciano</span></button>
+                </div>
+            </div>
+
+            <footer class="customizer-footer">
+                <span>As escolhas ficam salvas neste navegador.</span>
+                <button id="apply-customizer" type="button">APLICAR E VOLTAR AO JOGO</button>
+            </footer>
+        </section>
+    </div>
+
+    <div class="upgrade-toast" id="upgrade-toast" aria-live="polite">
+        <span>UPGRADE CONCLUÍDO</span>
+        <strong id="upgrade-toast-title">NÍVEL 1</strong>
+        <small id="upgrade-toast-detail">Novo bônus ativo.</small>
+    </div>
+
+    <div class="win-particles" id="win-particles" aria-hidden="true"></div>
+    <div class="win-banner" id="win-banner" aria-hidden="true">
+        <span id="win-banner-label">COMBINAÇÃO</span>
+        <strong id="win-banner-value">R$ 0,00</strong>
+    </div>
+
+    <!-- Evento especial -->
+    <div class="modal-layer hidden" id="million-modal" role="dialog" aria-modal="true" aria-labelledby="million-title">
+        <div class="modal-backdrop"></div>
+        <div class="million-card">
+            <span class="modal-kicker">SALDO ≥ R$ 1.000.000</span>
+            <h2 id="million-title">Apostar tudo?</h2>
+            <strong id="million-value">R$ 1.000.000,00</strong>
+            <p>Uma única rodada. Todo o saldo. Sem botão de voltar.</p>
+            <button id="all-in-button" type="button">SIM, APOSTAR TUDO</button>
+        </div>
+    </div>
+
+    <!-- Saldo zerado normal -->
+    <div class="modal-layer hidden" id="broke-modal" role="dialog" aria-modal="true" aria-labelledby="broke-title">
+        <div class="modal-backdrop"></div>
+        <div class="broke-card">
+            <span class="broke-code">SALDO 00 • RODADA ENCERRADA</span>
+            <strong>R$ 0,00</strong>
+            <h2 id="broke-title">A última ficha também foi.</h2>
+            <p>Aqui, R$ 100 voltam com um clique. Fora da tela, dívida, crédito e patrimônio não possuem botão de reiniciar. Seus pontos acumulados permanecem salvos; os upgrades já conquistados também continuam.</p>
+            <div class="broke-actions">
+                <button id="restart-button" type="button">RECOMEÇAR COM R$ 100</button>
+                <a href="../TCC/tcc.html">VER O OUTRO LADO ↗</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Colapso -->
+    <div class="meltdown-layer" id="meltdown-layer" aria-hidden="true">
+        <div class="glitch-bars"></div>
+        <div class="circuit-lines"></div>
+        <div class="negative-field" id="negative-field"></div>
+        <div class="overload-message" id="overload-message">ERRO • SALDO NEGATIVO • SISTEMA EM COLAPSO</div>
+    </div>
+
+    <!-- Vidro -->
+    <div class="glass-layer" id="glass-layer" aria-hidden="true">
+        <div class="glass-half glass-left"></div>
+        <div class="glass-half glass-right"></div>
+
+        <svg class="crack-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+            <path class="crack-main" pathLength="100" d="M510 -20 L493 110 L530 196 L482 286 L522 378 L476 472 L515 562 L488 658 L526 754 L489 848 L514 1020" />
+            <path class="crack-branch branch-a" pathLength="100" d="M507 115 L420 168 L362 245" />
+            <path class="crack-branch branch-b" pathLength="100" d="M486 286 L390 322 L338 405" />
+            <path class="crack-branch branch-c" pathLength="100" d="M520 378 L617 419 L688 493" />
+            <path class="crack-branch branch-d" pathLength="100" d="M478 473 L385 520 L303 603" />
+            <path class="crack-branch branch-e" pathLength="100" d="M516 563 L626 612 L716 700" />
+            <path class="crack-branch branch-f" pathLength="100" d="M488 658 L415 720 L350 813" />
+        </svg>
+
+        <div class="glass-fragments" id="glass-fragments"></div>
+    </div>
+
+    <!-- Mini-dossiê pós-quebra -->
+    <section class="aftermath" id="aftermath" aria-labelledby="aftermath-title">
+        <div class="aftermath-light" aria-hidden="true"></div>
+        <div class="aftermath-noise" aria-hidden="true"></div>
+
+        <div class="aftermath-shell">
+            <nav class="aftermath-nav">
+                <span>BET / DEPOIS DA RODADA</span>
+                <button class="back-game-button" id="back-to-game" type="button">← VOLTAR AO CAÇA-NÍQUEL</button>
+            </nav>
+
+            <header class="aftermath-hero parallax-card" data-depth="0.25">
+                <span class="aftermath-kicker">R$ 1.000.000 FICTÍCIOS • R$ 0,00 EM UMA RODADA</span>
+                <h2 id="aftermath-title">A tela quebrou.<br><span>Agora olha para fora dela.</span></h2>
+                <p>O milhão que desapareceu era simulado. As perdas, investigações, dívidas e números abaixo foram documentados.</p>
+            </header>
+
+            <div class="impact-ticker" aria-hidden="true">
+                <div>
+                    <span>R$ 36,96 BI • GGR 2025</span>
+                    <span>R$ 20,8 BI • PIX EM UM MÊS</span>
+                    <span>R$ 3 BI • BENEFICIÁRIOS DO BOLSA FAMÍLIA</span>
+                    <span>R$ 1,6 BI • OPERAÇÃO BACKYARD</span>
+                    <span>234 ALUNOS • PESQUISA DO GRUPO</span>
+                    <span>R$ 36,96 BI • GGR 2025</span>
+                </div>
+            </div>
+
+            <div class="aftermath-statement parallax-card" data-depth="0.12">
+                <span>O QUE O JOGO NÃO MOSTRA</span>
+                <p id="impact-statement">Em segundos, a interface transforma perda em animação. Fora da tela, algumas perdas viram dívida, patrimônio vendido, conflito familiar e investigação.</p>
+            </div>
+
+            <div class="dossier-wrap">
+                <aside class="dossier-tabs" aria-label="Resumo das áreas do TCC">
+                    <button class="dossier-tab active" data-dossier="escala" type="button"><span>01</span>Escala</button>
+                    <button class="dossier-tab" data-dossier="publicidade" type="button"><span>02</span>Publicidade</button>
+                    <button class="dossier-tab" data-dossier="investigacoes" type="button"><span>03</span>Investigações</button>
+                    <button class="dossier-tab" data-dossier="renda" type="button"><span>04</span>Renda</button>
+                    <button class="dossier-tab" data-dossier="casos" type="button"><span>05</span>Casos reais</button>
+                    <button class="dossier-tab" data-dossier="saude" type="button"><span>06</span>Saúde</button>
+                    <button class="dossier-tab" data-dossier="pesquisa" type="button"><span>07</span>Pesquisa</button>
+                    <button class="dossier-tab" data-dossier="comparacao" type="button"><span>08</span>Comparação</button>
+                </aside>
+
+                <article class="dossier-stage parallax-card" data-depth="0.16" id="dossier-stage" aria-live="polite">
+                    <div class="dossier-stage-top">
+                        <span id="dossier-index">01 / ESCALA ECONÔMICA</span>
+                        <a id="dossier-source" href="https://www.gov.br/fazenda/pt-br/composicao/orgaos/secretaria-de-premios-e-apostas/apresentacoes/defeso-2deg-panorama-semestral-de-apostas-de-quota-fixa-jan-2026.pdf" target="_blank" rel="noopener noreferrer">FONTE ↗</a>
+                    </div>
+                    <strong class="dossier-number" id="dossier-number">R$ 36,96 bi</strong>
+                    <h3 id="dossier-title">Receita bruta dos jogos no mercado regulado em 2025.</h3>
+                    <p id="dossier-text">GGR é o valor que permanece com as operadoras depois do pagamento dos prêmios. Não é a mesma coisa que todo o dinheiro movimentado nas apostas.</p>
+                    <div class="dossier-points" id="dossier-points"></div>
+                </article>
+            </div>
+
+            <section class="mini-news parallax-card" data-depth="0.10">
+                <header>
+                    <span>CASOS DOCUMENTADOS</span>
+                    <h3>Quando o número deixa de ser estatística.</h3>
+                </header>
+                <div class="mini-news-grid">
+                    <article>
+                        <span>PERDA PATRIMONIAL</span>
+                        <strong>2 imóveis + R$ 50 mil em dívidas</strong>
+                        <p>Relato publicado sobre compulsão em apostas, perda de imóveis e ruptura do casamento.</p>
+                    </article>
+                    <article>
+                        <span>ENDIVIDAMENTO</span>
+                        <strong>R$ 400 mil</strong>
+                        <p>Perdas financiadas com bancos, familiares e agiotas antes do início de tratamento.</p>
+                    </article>
+                    <article class="danger-news">
+                        <span>SAÚDE MENTAL E MORTE</span>
+                        <strong>R$ 1,5 milhão em dívidas</strong>
+                        <p>Família relatou descobrir a dimensão do problema somente após a morte do homem de 46 anos.</p>
+                    </article>
+                </div>
+                <p class="mini-news-note">Casos individuais não medem prevalência. Eles mostram consequências concretas que números agregados não conseguem mostrar sozinhos.</p>
+            </section>
+
+            <div class="aftermath-links">
+                <a class="aftermath-link tcc-link" href="../TCC/tcc.html">
+                    <span>QUER ENTENDER MAIS?</span>
+                    <strong>Dados completos, fontes, notícias, comparação e pesquisa escolar.</strong>
+                    <em>ABRIR O TCC ↗</em>
+                </a>
+
+                <a class="aftermath-link who-link" href="../QUEM/quem.html">
+                    <span>O GRUPO</span>
+                    <strong>Quem somos e como o projeto foi construído.</strong>
+                    <em>QUEM ↗</em>
+                </a>
+            </div>
+
+            <div class="aftermath-bottom">
+                <p>Quer testar novamente como a interface te puxa para outra rodada?</p>
+                <button class="back-game-button back-game-bottom" id="back-to-game-bottom" type="button">← VOLTAR E RECOMEÇAR COM R$ 100</button>
+            </div>
+        </div>
+    </section>
+
+    <audio id="audio-ambient" preload="metadata"></audio>
+    <audio id="audio-spin" src="./assets/audio/spin.ogg" preload="auto"></audio>
+    <audio id="audio-stop1" src="./assets/audio/stop1.ogg" preload="auto"></audio>
+    <audio id="audio-stop2" src="./assets/audio/stop2.ogg" preload="auto"></audio>
+    <audio id="audio-stop3" src="./assets/audio/stop3.ogg" preload="auto"></audio>
+    <audio id="audio-click" src="./assets/audio/click.ogg" preload="auto"></audio>
+    <audio id="audio-win" src="./assets/audio/win_soft.ogg" preload="auto"></audio>
+    <audio id="audio-big-win" src="./assets/audio/win_big.ogg" preload="auto"></audio>
+    <audio id="audio-circuit" src="./assets/audio/circuit.ogg" preload="auto"></audio>
+    <audio id="audio-glass" src="./assets/audio/glass_break.ogg" preload="auto"></audio>
+    <audio id="audio-upgrade" src="./assets/audio/upgrade.ogg" preload="auto"></audio>
+    <audio id="audio-defeat" src="./assets/audio/defeat.ogg" preload="auto"></audio>
+
+    <script src="./jogar.js"></script>
+</body>
+</html>

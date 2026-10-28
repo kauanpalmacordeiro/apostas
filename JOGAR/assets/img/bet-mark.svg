@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="edge" x1="34" y1="20" x2="166" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F4FF"/>
+      <stop offset=".45" stop-color="#A56CFF"/>
+      <stop offset="1" stop-color="#5A20A8"/>
+    </linearGradient>
+    <radialGradient id="core" cx="0" cy="0" r="1" gradientTransform="translate(100 68) rotate(90) scale(114)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#25143C"/>
+      <stop offset="1" stop-color="#08050D"/>
+    </radialGradient>
+  </defs>
+  <path d="M100 10 171 51v98l-71 41-71-41V51l71-41Z" fill="url(#core)" stroke="url(#edge)" stroke-width="7"/>
+  <path d="M100 25 158 58v84l-58 33-58-33V58l58-33Z" stroke="#8F55E6" stroke-opacity=".42" stroke-width="2"/>
+  <text x="100" y="116" text-anchor="middle" fill="url(#edge)" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="900" letter-spacing="-3">BET</text>
+</svg>

@@ -1,0 +1,1207 @@
+/* =========================================================
+   TELA DIVISÓRIA — TCC x JOGAR
+   TCC: preto/vermelho, técnico, 3D e contido
+   JOGAR: roxo/rosa, cassino, energia e movimento
+========================================================= */
+
+:root{
+    --preto:#050506;
+    --preto-2:#09090b;
+    --vermelho:#c51222;
+    --vermelho-claro:#ff3b4d;
+    --branco:#f7f7f7;
+    --cinza:#a6a6ad;
+    --roxo:#7a00ff;
+    --roxo-2:#3f006d;
+    --rosa:#ff2ba6;
+    --rosa-2:#a70071;
+    --mx:0;
+    --my:0;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+    min-height:100vh;
+    overflow:hidden;
+    background:#020203;
+    color:var(--branco);
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing:antialiased;
+}
+
+button,
+a{
+    font:inherit;
+}
+
+button{
+    border:0;
+}
+
+.tela{
+    position:relative;
+    display:flex;
+    width:100%;
+    min-height:100vh;
+    overflow:hidden;
+    background:#050506;
+}
+
+.lado{
+    --pointer-x:0;
+    --pointer-y:0;
+    position:relative;
+    isolation:isolate;
+    width:50%;
+    min-height:100vh;
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+    transition:
+        width .82s cubic-bezier(.68,-.02,.18,1),
+        opacity .55s ease,
+        filter .55s ease;
+}
+
+.conteudo{
+    position:relative;
+    z-index:10;
+    width:min(82%, 430px);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+}
+
+/* =========================================================
+   DIVISOR
+========================================================= */
+
+.divisor{
+    position:absolute;
+    z-index:40;
+    top:7%;
+    bottom:7%;
+    left:50%;
+    width:1px;
+    transform:translateX(-50%);
+    background:linear-gradient(
+        to bottom,
+        transparent,
+        rgba(255,255,255,.09) 20%,
+        rgba(255,255,255,.18) 50%,
+        rgba(255,255,255,.09) 80%,
+        transparent
+    );
+    pointer-events:none;
+    transition:opacity .35s ease;
+}
+
+.divisor span{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:5px;
+    height:44px;
+    border-radius:999px;
+    transform:translate(-50%,-50%);
+    background:linear-gradient(#d21c31,#7711ff,#ff2ba6);
+    box-shadow:0 0 18px rgba(147,38,255,.34);
+}
+
+/* =========================================================
+   TCC — PRETO / VERMELHO / ESTÁTICO
+   Sem parallax, tilt, scan ou animações de fundo.
+========================================================= */
+
+.tcc{
+    color:#f3f3f3;
+    background:
+        radial-gradient(circle at 22% 24%, rgba(124,12,24,.12), transparent 34%),
+        linear-gradient(145deg,#050506 0%,#08080a 58%,#0d0809 100%);
+}
+
+/* Moldura puramente visual e estática */
+.tcc-frame{
+    position:absolute;
+    z-index:2;
+    inset:18px;
+    pointer-events:none;
+    border:1px solid rgba(255,255,255,.045);
+    clip-path:polygon(
+        0 0,
+        34% 0,
+        34% 1px,
+        100% 1px,
+        100% 64%,
+        calc(100% - 1px) 64%,
+        calc(100% - 1px) 100%,
+        66% 100%,
+        66% calc(100% - 1px),
+        0 calc(100% - 1px)
+    );
+}
+
+.conteudo-tcc{
+    gap:14px;
+    padding:34px 26px;
+    border:1px solid rgba(255,255,255,.055);
+    background:rgba(255,255,255,.012);
+    box-shadow:
+        0 28px 65px rgba(0,0,0,.18),
+        inset 0 1px rgba(255,255,255,.025);
+}
+
+/* Cantos vermelhos do quadro: estáticos */
+.conteudo-tcc::before,
+.conteudo-tcc::after{
+    content:"";
+    position:absolute;
+    width:38px;
+    height:38px;
+    pointer-events:none;
+}
+
+.conteudo-tcc::before{
+    top:-1px;
+    left:-1px;
+    border-top:1px solid rgba(231,32,51,.70);
+    border-left:1px solid rgba(231,32,51,.70);
+}
+
+.conteudo-tcc::after{
+    right:-1px;
+    bottom:-1px;
+    border-right:1px solid rgba(231,32,51,.36);
+    border-bottom:1px solid rgba(231,32,51,.36);
+}
+
+.micro-label{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    color:#8d8d95;
+    font-size:10px;
+    line-height:1;
+    font-weight:700;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+}
+
+.micro-dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--vermelho-claro);
+}
+
+.titulo-tcc-wrap{
+    position:relative;
+    display:flex;
+    align-items:flex-end;
+    gap:9px;
+}
+
+.titulo-index{
+    margin-bottom:8px;
+    color:#9a252f;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+}
+
+.titulo-tcc{
+    position:relative;
+    color:#f0f0f0;
+    font-size:clamp(50px,6vw,72px);
+    line-height:.92;
+    letter-spacing:-.075em;
+    font-weight:900;
+}
+
+/* Linha decorativa fixa — sem hover/animação */
+.titulo-tcc::after{
+    content:"";
+    position:absolute;
+    left:4%;
+    right:1%;
+    bottom:-8px;
+    height:2px;
+    background:linear-gradient(90deg,var(--vermelho),rgba(197,18,34,.06));
+}
+
+.subtitulo-tcc{
+    color:#a8a8ad;
+    font-size:clamp(14px,1.5vw,17px);
+    line-height:1.5;
+}
+
+/* ÚNICO EFEITO MANTIDO NO TCC: BOTÃO */
+.btn-tcc{
+    position:relative;
+    min-width:142px;
+    margin-top:5px;
+    padding:13px 19px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:24px;
+    border:1px solid rgba(213,31,48,.48);
+    border-radius:3px;
+    overflow:hidden;
+    cursor:pointer;
+    color:#efefef;
+    background:#0e0e10;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.018);
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.18em;
+    transition:
+        transform .18s ease,
+        border-color .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+}
+
+.btn-tcc::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(90deg,rgba(197,18,34,.20),rgba(197,18,34,.03));
+    transform:translateX(-103%);
+    transition:transform .35s ease;
+}
+
+.btn-tcc > *{
+    position:relative;
+    z-index:2;
+}
+
+.btn-tcc:hover{
+    border-color:rgba(255,59,77,.9);
+    background:#121214;
+    box-shadow:0 9px 28px rgba(0,0,0,.24);
+}
+
+.btn-tcc:hover::before{
+    transform:translateX(0);
+}
+
+.btn-arrow{
+    color:#d13543;
+    font-size:16px;
+    transition:transform .25s ease;
+}
+
+.btn-tcc:hover .btn-arrow{
+    transform:translate(3px,-3px);
+}
+
+.tcc-status{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-top:4px;
+    color:#58585f;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:8px;
+    letter-spacing:.15em;
+}
+
+.tcc-status span{
+    width:34px;
+    height:1px;
+    background:#53121a;
+}
+
+.edge-label{
+    position:absolute;
+    z-index:8;
+    bottom:23px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:8px;
+    font-weight:700;
+    letter-spacing:.18em;
+    pointer-events:none;
+}
+
+.edge-label-tcc{
+    left:28px;
+    color:#4e4e54;
+}
+
+
+/* =========================================================
+   JOGAR — VISUAL ANTIGO RESTAURADO
+========================================================= */
+
+.jogar{
+    position:relative;
+    overflow:hidden;
+    isolation:isolate;
+    color:white;
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(174, 0, 255, 0.48),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(255, 0, 170, 0.25),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 10% 90%,
+            rgba(77, 0, 255, 0.3),
+            transparent 30%
+        ),
+        linear-gradient(
+            145deg,
+            #100018,
+            #270038 45%,
+            #100018
+        );
+}
+
+/* Grade de fundo */
+
+.jogar::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-3;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.025) 1px,
+            transparent 1px
+        );
+
+    background-size:45px 45px;
+
+    mask-image:linear-gradient(
+        to bottom,
+        transparent,
+        black 20%,
+        black 80%,
+        transparent
+    );
+
+    animation:moverGrade 12s linear infinite;
+}
+
+/* Brilho passando pela tela */
+
+.jogar::after{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:150%;
+    top:-25%;
+    left:-60%;
+
+    z-index:-1;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.07),
+        transparent
+    );
+
+    transform:rotate(20deg);
+
+    animation:brilhoTela 7s ease-in-out infinite;
+}
+
+/* Luz central pulsando */
+
+.luzes-bet{
+    position:absolute;
+    width:520px;
+    height:520px;
+
+    border-radius:50%;
+
+    background:radial-gradient(
+        circle,
+        rgba(174,0,255,0.25),
+        rgba(138,0,255,0.08) 45%,
+        transparent 70%
+    );
+
+    filter:blur(15px);
+    z-index:-2;
+
+    animation:pulsarLuz 3s ease-in-out infinite;
+}
+
+/* Conteúdo principal */
+
+.conteudo-bet{
+    position:relative;
+    z-index:5;
+
+    width:90%;
+    max-width:600px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    gap:18px;
+    text-align:center;
+}
+
+/* Selo apostas online */
+
+.selo-bet{
+    display:flex;
+    align-items:center;
+    gap:9px;
+
+    padding:8px 16px;
+
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:50px;
+
+    background:rgba(255,255,255,0.07);
+    backdrop-filter:blur(10px);
+
+    color:#e9c9ff;
+
+    font-size:12px;
+    font-weight:bold;
+    letter-spacing:3px;
+
+    box-shadow:
+        inset 0 0 15px rgba(255,255,255,0.04),
+        0 0 20px rgba(138,0,255,0.15);
+}
+
+.ponto-online{
+    width:9px;
+    height:9px;
+
+    border-radius:50%;
+    background:#19ff83;
+
+    box-shadow:
+        0 0 5px #19ff83,
+        0 0 12px #19ff83;
+
+    animation:pontoPiscando 1.5s infinite;
+}
+
+/* Título BET */
+
+.titulo-bet{
+    position:relative;
+
+    margin:0;
+
+    font-size:clamp(80px, 10vw, 135px);
+    font-weight:900;
+    font-style:italic;
+    line-height:0.9;
+    letter-spacing:-8px;
+
+    color:white;
+
+    text-shadow:
+        0 0 5px white,
+        0 0 15px #c75cff,
+        0 0 35px #8a00ff,
+        0 0 70px #8a00ff;
+
+    animation:pulsarTitulo 2.4s ease-in-out infinite;
+}
+
+/* Contorno atrás do título */
+
+.titulo-bet::before{
+    content:"BET";
+
+    position:absolute;
+    top:5px;
+    left:50%;
+
+    transform:translateX(-50%);
+    z-index:-1;
+
+    color:transparent;
+
+    -webkit-text-stroke:3px rgba(255,0,200,0.65);
+
+    filter:blur(1px);
+}
+
+/* Brilho atravessando as letras */
+
+.titulo-bet span{
+    position:relative;
+    display:inline-block;
+
+    background:linear-gradient(
+        110deg,
+        #ffffff 15%,
+        #e5b4ff 35%,
+        #ffffff 50%,
+        #9c1dff 70%,
+        #ffffff 90%
+    );
+
+    background-size:250% auto;
+
+    color:transparent;
+    background-clip:text;
+    -webkit-background-clip:text;
+
+    animation:brilhoTexto 3s linear infinite;
+}
+
+/* Subtítulo */
+
+.subtitulo-bet{
+    margin-top:-5px;
+
+    color:#ead6f5;
+
+    font-size:18px;
+    letter-spacing:1px;
+
+    text-shadow:0 0 10px rgba(255,255,255,0.2);
+}
+
+/* Quadro do prêmio */
+
+.premio-bet{
+    position:relative;
+
+    width:min(100%, 390px);
+
+    padding:14px 25px;
+
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+
+    border:1px solid rgba(208,128,255,0.4);
+    border-radius:15px;
+
+    background:linear-gradient(
+        110deg,
+        rgba(138,0,255,0.15),
+        rgba(255,255,255,0.08),
+        rgba(255,0,187,0.12)
+    );
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:
+        inset 0 0 20px rgba(255,255,255,0.05),
+        0 0 30px rgba(138,0,255,0.18);
+}
+
+.premio-bet::before{
+    content:"";
+
+    position:absolute;
+    inset:-1px;
+    z-index:-1;
+
+    border-radius:15px;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        #d44cff,
+        transparent
+    );
+
+    opacity:0.3;
+    filter:blur(7px);
+}
+
+.premio-texto{
+    color:#d7a0f7;
+
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:3px;
+}
+
+.premio-bet strong{
+    font-size:29px;
+
+    background:linear-gradient(
+        90deg,
+        #ffffff,
+        #deb0ff,
+        #ffffff
+    );
+
+    color:transparent;
+    background-clip:text;
+    -webkit-background-clip:text;
+
+    text-shadow:0 0 20px rgba(195,74,255,0.35);
+}
+
+/* Botão principal */
+
+.botao-apostar{
+    position:relative;
+    overflow:hidden;
+
+    min-width:280px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:14px;
+
+    padding:19px 38px;
+
+    border:1px solid rgba(255,255,255,0.7);
+    border-radius:50px;
+
+    background:linear-gradient(
+        90deg,
+        #7000ff,
+        #c000ff,
+        #ff008c
+    );
+
+    background-size:200%;
+
+    color:white;
+
+    font-size:18px;
+    font-weight:900;
+    letter-spacing:1.5px;
+
+    box-shadow:
+        0 0 8px #c000ff,
+        0 0 22px rgba(192,0,255,0.8),
+        0 0 55px rgba(138,0,255,0.45),
+        inset 0 1px 1px rgba(255,255,255,0.6);
+
+    animation:
+        fundoBotao 3s linear infinite,
+        pulsarBotao 1.8s ease-in-out infinite;
+}
+
+.botao-apostar::before{
+    content:"";
+
+    position:absolute;
+    width:70px;
+    height:200%;
+
+    top:-50%;
+    left:-110px;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.8),
+        transparent
+    );
+
+    transform:rotate(20deg);
+
+    animation:brilhoBotao 2.8s infinite;
+}
+
+.botao-apostar:hover{
+    transform:translateY(-5px) scale(1.08);
+
+    box-shadow:
+        0 0 12px white,
+        0 0 35px #d000ff,
+        0 0 80px #8a00ff;
+}
+
+.botao-apostar:active{
+    transform:scale(0.97);
+}
+
+.seta{
+    font-size:25px;
+    transition:transform 0.3s;
+}
+
+.botao-apostar:hover .seta{
+    transform:translateX(8px);
+}
+
+/* Aviso inferior */
+
+.aviso-bet{
+    color:rgba(255,255,255,0.48);
+
+    font-size:12px;
+    letter-spacing:1px;
+}
+
+/* Partículas flutuantes */
+
+.particulas{
+    position:absolute;
+    inset:0;
+
+    z-index:1;
+
+    pointer-events:none;
+    overflow:hidden;
+}
+
+.particulas span{
+    position:absolute;
+    bottom:-70px;
+
+    color:rgba(228,178,255,0.5);
+
+    font-size:25px;
+    font-weight:bold;
+
+    text-shadow:
+        0 0 8px #c000ff,
+        0 0 20px #8a00ff;
+
+    animation:subirParticula linear infinite;
+}
+
+.particulas span:nth-child(1){
+    left:8%;
+    animation-duration:9s;
+    animation-delay:0s;
+}
+
+.particulas span:nth-child(2){
+    left:20%;
+    animation-duration:12s;
+    animation-delay:2s;
+}
+
+.particulas span:nth-child(3){
+    left:34%;
+    animation-duration:8s;
+    animation-delay:5s;
+}
+
+.particulas span:nth-child(4){
+    left:48%;
+    animation-duration:11s;
+    animation-delay:1s;
+}
+
+.particulas span:nth-child(5){
+    left:62%;
+    animation-duration:9s;
+    animation-delay:4s;
+}
+
+.particulas span:nth-child(6){
+    left:74%;
+    animation-duration:13s;
+    animation-delay:2s;
+}
+
+.particulas span:nth-child(7){
+    left:87%;
+    animation-duration:10s;
+    animation-delay:6s;
+}
+
+.particulas span:nth-child(8){
+    left:94%;
+    animation-duration:8s;
+    animation-delay:3s;
+}
+
+/* =========================
+           ANIMAÇÕES
+========================= */
+
+@keyframes pulsarLuz{
+    0%, 100%{
+        transform:scale(0.9);
+        opacity:0.6;
+    }
+
+    50%{
+        transform:scale(1.15);
+        opacity:1;
+    }
+}
+
+@keyframes pulsarTitulo{
+    0%, 100%{
+        transform:scale(1);
+        filter:brightness(1);
+    }
+
+    50%{
+        transform:scale(1.025);
+        filter:brightness(1.25);
+    }
+}
+
+@keyframes brilhoTexto{
+    from{
+        background-position:200% center;
+    }
+
+    to{
+        background-position:-50% center;
+    }
+}
+
+@keyframes fundoBotao{
+    from{
+        background-position:0%;
+    }
+
+    to{
+        background-position:200%;
+    }
+}
+
+@keyframes pulsarBotao{
+    0%, 100%{
+        filter:brightness(1);
+    }
+
+    50%{
+        filter:brightness(1.25);
+    }
+}
+
+@keyframes brilhoBotao{
+    0%{
+        left:-110px;
+    }
+
+    45%, 100%{
+        left:120%;
+    }
+}
+
+@keyframes pontoPiscando{
+    0%, 100%{
+        opacity:1;
+    }
+
+    50%{
+        opacity:0.3;
+    }
+}
+
+@keyframes moverGrade{
+    from{
+        background-position:0 0;
+    }
+
+    to{
+        background-position:45px 45px;
+    }
+}
+
+@keyframes brilhoTela{
+    0%, 20%{
+        left:-60%;
+    }
+
+    60%, 100%{
+        left:140%;
+    }
+}
+
+@keyframes subirParticula{
+    0%{
+        transform:translateY(0) rotate(0deg) scale(0.7);
+        opacity:0;
+    }
+
+    15%{
+        opacity:0.8;
+    }
+
+    80%{
+        opacity:0.6;
+    }
+
+    100%{
+        transform:translateY(-115vh) rotate(360deg) scale(1.3);
+        opacity:0;
+    }
+}
+
+
+
+/* =========================================================
+   MARCADOR DE CANTO — BET
+========================================================= */
+
+.edge-label-bet{
+    right:28px;
+    color:rgba(235,196,255,.38);
+}
+
+/* =========================================================
+   ABERTURA / NAVEGAÇÃO
+========================================================= */
+
+.tela.abrir-tcc .tcc{
+    width:100%;
+}
+
+.tela.abrir-tcc .jogar{
+    width:0;
+    opacity:0;
+    filter:brightness(.4);
+}
+
+.tela.abrir-jogar .jogar{
+    width:100%;
+}
+
+.tela.abrir-jogar .tcc{
+    width:0;
+    opacity:0;
+    filter:brightness(.4);
+}
+
+.tela.abrir-tcc .divisor,
+.tela.abrir-jogar .divisor{
+    opacity:0;
+}
+
+/* =========================================================
+   RESPONSIVIDADE DA FUSÃO
+========================================================= */
+
+@media (max-width:980px){
+    .conteudo{
+        width:min(86%,390px);
+    }
+
+    .conteudo-tcc{
+        padding:28px 20px;
+    }
+
+    .titulo-tcc{
+        font-size:clamp(46px,7vw,64px);
+    }
+
+    .titulo-bet{
+        font-size:clamp(70px,10vw,105px);
+        letter-spacing:-6px;
+    }
+
+    .conteudo-bet{
+        width:88%;
+        max-width:520px;
+    }
+}
+
+@media (max-width:760px){
+    body{
+        overflow:auto;
+    }
+
+    .tela{
+        min-height:100svh;
+        height:100svh;
+        flex-direction:column;
+        overflow:hidden;
+    }
+
+    .lado{
+        width:100%;
+        min-height:50svh;
+        height:50svh;
+    }
+
+    .conteudo{
+        width:min(88%,420px);
+    }
+
+    .conteudo-tcc{
+        gap:8px;
+        padding:18px 20px;
+    }
+
+    .micro-label,
+    .tcc-status,
+    .aviso-bet{
+        display:none;
+    }
+
+    .titulo-tcc{
+        font-size:46px;
+    }
+
+    .subtitulo-tcc,
+    .subtitulo-bet{
+        font-size:13px;
+    }
+
+    .btn-tcc{
+        min-width:128px;
+        padding:10px 16px;
+    }
+
+    .conteudo-bet{
+        width:min(88%,420px);
+        gap:8px;
+    }
+
+    .selo-bet{
+        padding:5px 10px;
+        font-size:8px;
+        letter-spacing:2px;
+    }
+
+    .titulo-bet{
+        font-size:58px;
+        letter-spacing:-4px;
+    }
+
+    .premio-bet{
+        width:min(100%,270px);
+        padding:8px 15px;
+    }
+
+    .premio-bet strong{
+        font-size:21px;
+    }
+
+    .botao-apostar{
+        min-width:220px;
+        padding:12px 22px;
+        font-size:12px;
+    }
+
+    .edge-label{
+        bottom:12px;
+        font-size:7px;
+    }
+
+    .edge-label-tcc{
+        left:18px;
+    }
+
+    .edge-label-bet{
+        right:18px;
+    }
+
+    .divisor{
+        top:50%;
+        bottom:auto;
+        left:7%;
+        right:7%;
+        width:auto;
+        height:1px;
+        transform:none;
+        background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+    }
+
+    .divisor span{
+        top:50%;
+        left:50%;
+        width:38px;
+        height:4px;
+    }
+
+
+    .tela.abrir-tcc .tcc{
+        width:100%;
+        height:100svh;
+        min-height:100svh;
+    }
+
+    .tela.abrir-tcc .jogar{
+        width:100%;
+        height:0;
+        min-height:0;
+    }
+
+    .tela.abrir-jogar .jogar{
+        width:100%;
+        height:100svh;
+        min-height:100svh;
+    }
+
+    .tela.abrir-jogar .tcc{
+        width:100%;
+        height:0;
+        min-height:0;
+    }
+}
+
+@media (max-height:680px) and (min-width:761px){
+    .conteudo-tcc{
+        padding:24px 21px;
+        gap:10px;
+    }
+
+    .titulo-tcc{
+        font-size:54px;
+    }
+
+    .conteudo-bet{
+        gap:10px;
+    }
+
+    .titulo-bet{
+        font-size:72px;
+    }
+
+    .premio-bet{
+        padding:9px 18px;
+    }
+
+    .botao-apostar{
+        padding:14px 27px;
+    }
+}
+
+/* Acessibilidade */
+@media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        scroll-behavior:auto !important;
+        transition-duration:.01ms !important;
+    }
+}
+
+
+/* Estado técnico usado apenas ao restaurar a página pelo botão Voltar. */
+.tela.restaurando .lado,
+.tela.restaurando .divisor,
+.tela.restaurando .conteudo {
+    transition: none !important;
+}
